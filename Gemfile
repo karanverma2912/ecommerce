@@ -17,7 +17,7 @@ gem "pundit"
 # Search & Pagination
 gem "searchkick"
 gem "elasticsearch"
-gem "pagy"
+gem "pagy", "~> 43.2"
 
 # File Storage
 gem "aws-sdk-s3"
@@ -74,4 +74,13 @@ group :development, :test do
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
+
+  gem "byebug"
+end
+
+group :test do
+  gem "rspec-rails"
+  gem "factory_bot_rails"
+  gem "faker"
+  gem "shoulda-matchers"
 end
