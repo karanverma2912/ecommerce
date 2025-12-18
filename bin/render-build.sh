@@ -3,12 +3,16 @@
 # Exit on error
 set -o errexit
 echo "Deploy Started"
-bundle install
-bin/rails assets:precompile
-bin/rails assets:clean
+echo "Installing gems..."
+bundle install --jobs=1 --retry=3
 
-# If you have a paid instance type, we recommend moving
-# database migrations like this one from the build command
-# to the pre-deploy command:
-bin/rails db:migrate
+echo "Precompiling assets..."
+bundle exec rails assets:precompile
+
+echo "Cleaning assets..."
+bundle exec rails assets:clean
+
+echo "Migrating database..."
+bundle exec rails db:migrate
+
 echo "Deploy done"
