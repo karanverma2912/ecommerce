@@ -1,13 +1,16 @@
 FROM ruby:3.4.7
-RUN apt-get update
-RUN mkdir /app
-WORKDIR /app
-COPY Gemfile /app/Gemfile
-COPY Gemfile.lock /app/Gemfile.lock
-RUN bundle install
-COPY . /app
-RUN bundle exec rake assets:precompile
-ENV PORT 5000
-EXPOSE 5000
 
-CMD bundle exec rake db:migrate && bundle exec rails server -p $PORT
+RUN apt-get update -qq && apt-get install -y build-essential libpq-dev
+
+WORKDIR /app
+
+COPY Gemfile Gemfile.lock ./
+RUN bundle install
+
+COPY . .
+
+ENV RAILS_ENV=production
+
+EXPOSE 3000
+
+CMD ["bundle", "exec", "rails", "server", "-b", "0.0.0.0", "-p", "${PORT}"]
