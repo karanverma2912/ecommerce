@@ -8,11 +8,12 @@ module Api
       skip_after_action :verify_policy_scoped, only: [ :index, :show, :search ]
 
       def index
-        @pagy, @products = pagy(policy_scope(Product.active.includes(:category)))
-        render json: {
-          products: ActiveModelSerializers::SerializableResource.new(@products, each_serializer: ProductSerializer),
-          pagination: pagination_metadata(@pagy)
-        }
+        @pagy, @products = pagy(ProductPolicy::Scope.new(current_user, Product).resolve, page: params[:page], limit: params[:per_page])
+        render json: @products,
+               root: "products",
+               each_serializer: ProductSerializer,
+               meta: pagination_metadata(@pagy),
+               adapter: :json
       end
 
       def show
