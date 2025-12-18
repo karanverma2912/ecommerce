@@ -7,11 +7,19 @@ default: &default
 development:
   <<: *default
   database: ecommerce_development
+  username: postgres
+  password: postgres
+  host: localhost
 
-production:
-  <<: *default
-  host:     <%= Rails.application.credentials.dig(:database, :host) %>
-  port:     5432
-  database: postgres
-  user:     postgres
-  password: <%= Rails.application.credentials.dig(:database, :password) %>
+# production:
+#   <<: *default
+#   host:     <%= Rails.application.credentials.dig(:database, :host) %>
+#   port:     5432
+#   database: postgres
+#   user:     postgres
+#   password: <%= Rails.application.credentials.dig(:database, :password) %>
+
+# production :
+#   <<: *default
+#   pool: <%= ENV.fetch("RAILS_MAX_THREADS", 5) %>
+#   url: <%= ENV["DATABASE_URL"] %>
