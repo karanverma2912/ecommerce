@@ -3,7 +3,6 @@ default: &default
   encoding: unicode
   max_connections: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
 
-
 development:
   <<: *default
   database: ecommerce_development
@@ -11,15 +10,9 @@ development:
   password: postgres
   host: localhost
 
-# production:
-#   <<: *default
-#   host:     <%= Rails.application.credentials.dig(:database, :host) %>
-#   port:     5432
-#   database: postgres
-#   user:     postgres
-#   password: <%= Rails.application.credentials.dig(:database, :password) %>
+test:
+  <<: *default
+  database: ecommerce_test
 
-# production :
-#   <<: *default
-#   pool: <%= ENV.fetch("RAILS_MAX_THREADS", 5) %>
-#   url: <%= ENV["DATABASE_URL"] %>
+production:
+  <<: *default
