@@ -13,6 +13,6 @@ echo "Cleaning assets..."
 bundle exec rails assets:clean
 
 echo "Migrating database..."
-bundle exec rails db:migrate
+bundle exec rails db:prepare
 
 echo "Deploy done"
