@@ -31,3 +31,10 @@
 # Ignore key files for decrypting credentials and more.
 /config/*.key
 
+
+# Render
+.env.local
+.env.*.local
+
+# Master key should NOT be in git
+config/master.key
