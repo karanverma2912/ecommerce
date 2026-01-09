@@ -1,7 +1,7 @@
 default: &default
   adapter: postgresql
   encoding: unicode
-  max_connections: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
 
 development:
   <<: *default
@@ -16,7 +16,4 @@ test:
 
 production:
   <<: *default
-  database: ecommerce_prod
-  username: postgres
-  password: postgres
-  host: localhost
+  url: <%= Rails.application.credentials.dig(:supabase, :database_url) %>
