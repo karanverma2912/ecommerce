@@ -1,5 +1,6 @@
 # frozen_string_literal: true
-Pagy::DEFAULT = Pagy::DEFAULT.merge(items: 20, limit: 100)
+
+Pagy::DEFAULT = Pagy::DEFAULT.merge(items: 20, limit: 20)
 # Pagy initializer file (43.2.1)
 # See https://ddnexus.github.io/pagy/resources/initializer/
 

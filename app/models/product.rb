@@ -2,6 +2,21 @@
 class Product < ApplicationRecord
   include Searchkick
 
+  def self.search_with_filters(query, params)
+    filters = { is_active: true }
+    filters[:category_name] = params[:category] if params[:category].present?
+    filters[:price] = (params[:min_price].to_f..params[:max_price].to_f) if params[:min_price].present? && params[:max_price].present?
+    filters[:in_stock] = true if params[:in_stock] == "true"
+
+    search(
+      query.presence || "*",
+      where: filters,
+      page: params[:page] || 1,
+      per_page: params[:per_page] || 20,
+      load: false
+    )
+  end
+
   # Associations
   belongs_to :category
   has_many :reviews, dependent: :destroy

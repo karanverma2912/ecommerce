@@ -12,7 +12,7 @@ module Api
       end
 
       def show
-        @order = Order.find(params[:id])
+        @order = Order.includes(order_items: { product: { images_attachments: :blob } }).find(params[:id])
         authorize @order
         render json: @order, serializer: OrderDetailSerializer
       end

@@ -4,6 +4,8 @@ module Api
   module V1
     class AuthController < ApplicationController
       skip_before_action :authenticate_request, only: [ :login, :register, :refresh ]
+      skip_after_action :verify_authorized
+      skip_after_action :verify_policy_scoped
 
       def register
         @user = User.new(user_params)

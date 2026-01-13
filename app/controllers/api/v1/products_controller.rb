@@ -1,14 +1,16 @@
-
 # app/controllers/api/v1/products_controller.rb
 module Api
   module V1
     class ProductsController < ApplicationController
       skip_before_action :authenticate_request, only: [ :index, :show, :search ]
-      skip_after_action :verify_authorized, only: [ :index, :show, :search ]
-      skip_after_action :verify_policy_scoped, only: [ :index, :show, :search ]
+      skip_after_action :verify_authorized, only: :search
 
       def index
-        @pagy, @products = pagy(ProductPolicy::Scope.new(current_user, Product).resolve, page: params[:page], limit: params[:per_page])
+        @pagy, @products = pagy(
+          policy_scope(Product.with_attached_images),
+          page: params[:page],
+          limit: params[:per_page]
+        )
         render json: @products,
                root: "products",
                each_serializer: ProductSerializer,
@@ -58,16 +60,7 @@ module Api
       end
 
       def search
-        query = params[:q].presence || "*"
-        filters = build_search_filters
-
-        @results = Product.search(
-          query,
-          where: filters,
-          page: params[:page] || 1,
-          per_page: params[:per_page] || 20,
-          load: false
-        )
+        @results = Product.search_with_filters(params[:q], params)
 
         render json: {
           products: @results.map { |result| ProductSerializer.new(result.record).as_json },
@@ -91,13 +84,7 @@ module Api
         end
       end
 
-      def build_search_filters
-        filters = { is_active: true }
-        filters[:category_name] = params[:category] if params[:category].present?
-        filters[:price] = (params[:min_price].to_f..params[:max_price].to_f) if params[:min_price].present? && params[:max_price].present?
-        filters[:in_stock] = true if params[:in_stock] == "true"
-        filters
-      end
+
 
       def pagination_metadata(pagy)
         {

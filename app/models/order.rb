@@ -28,18 +28,23 @@ class Order < ApplicationRecord
     self.status = "pending"
     self.payment_status = "unpaid"
 
-    if save
-      cart.cart_items.each do |cart_item|
-        order_items.create(
-          product_id: cart_item.product_id,
-          quantity: cart_item.quantity,
-          price: cart_item.price
-        )
+    ActiveRecord::Base.transaction do
+      if save
+        cart.cart_items.each do |cart_item|
+          order_items.create!(
+            product_id: cart_item.product_id,
+            quantity: cart_item.quantity,
+            price: cart_item.price
+          )
+        end
+        cart.clear
+        true
+      else
+        raise ActiveRecord::Rollback
+        false
       end
-      cart.clear
-      true
-    else
-      false
     end
+  rescue ActiveRecord::RecordInvalid
+    false
   end
 end
