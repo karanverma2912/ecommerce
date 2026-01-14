@@ -15,8 +15,7 @@ gem "bcrypt"
 gem "pundit"
 
 # Search & Pagination
-gem "searchkick"
-gem "elasticsearch"
+
 gem "pagy", "~> 43.2"
 
 # File Storage

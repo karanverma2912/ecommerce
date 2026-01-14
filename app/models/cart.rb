@@ -5,6 +5,10 @@ class Cart < ApplicationRecord
   has_many :cart_items, dependent: :destroy
   has_many :products, through: :cart_items
 
+  def items
+    cart_items
+  end
+
   # Methods
   def add_product(product, quantity = 1)
     item = cart_items.find_or_initialize_by(product_id: product.id)

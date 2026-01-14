@@ -11,10 +11,12 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       # Authentication routes
-      post "auth/register", to: "auth#register"
-      post "auth/login", to: "auth#login"
-      post "auth/refresh", to: "auth#refresh"
-      post "auth/logout", to: "auth#logout"
+      post 'auth/login', to: 'auth#login'
+      post 'auth/register', to: 'auth#register'
+      post 'auth/refresh', to: 'auth#refresh'
+      post 'auth/logout', to: 'auth#logout'
+      post 'auth/verify', to: 'auth#verify'
+      post 'auth/resend', to: 'auth#resend_otp'
 
       # Products routes
       resources :products, only: [ :index, :show, :create, :update, :destroy ] do

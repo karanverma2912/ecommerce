@@ -5,11 +5,13 @@ module Api
     class CartsController < ApplicationController
       def show
         @cart = current_user.carts.first_or_create
+        authorize @cart
         render json: @cart, serializer: CartSerializer
       end
 
       def add_item
         @cart = current_user.carts.first_or_create
+        authorize @cart
         @product = Product.find(params[:product_id])
 
         if @product.in_stock?
@@ -22,6 +24,7 @@ module Api
 
       def update_item
         @cart = current_user.carts.first_or_create
+        authorize @cart
         @cart_item = @cart.cart_items.find(params[:id])
 
         if @cart_item.update(quantity: params[:quantity])
@@ -34,12 +37,14 @@ module Api
 
       def remove_item
         @cart = current_user.carts.first_or_create
+        authorize @cart
         @cart.remove_product(params[:product_id])
         render json: @cart, serializer: CartSerializer
       end
 
       def clear
         @cart = current_user.carts.first_or_create
+        authorize @cart
         @cart.clear
         render json: { message: "Cart cleared" }, status: :ok
       end

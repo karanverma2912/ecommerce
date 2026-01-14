@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <h2>Welcome to NextGen Ecommerce, <%= @user.first_name %>!</h2>
+    <p>
+      Thank you for signing up. To verify your email address, please use the following One-Time Password (OTP):
+    </p>
+    <div style="background-color: #f3f4f6; padding: 20px; border-radius: 8px; text-align: center; margin: 20px 0;">
+      <h1 style="color: #0891b2; letter-spacing: 5px; margin: 0; font-family: monospace;"><%= @otp %></h1>
+    </div>
+    <p>
+      This code will expire in 10 minutes.
+    </p>
+    <p>
+      If you did not request this code, please ignore this email.
+    </p>
+    <p>Thanks,<br>The NextGen Team</p>
+  </body>
+</html>

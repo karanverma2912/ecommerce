@@ -60,14 +60,17 @@ module Api
       end
 
       def search
-        @results = Product.search_with_filters(params[:q], params)
-
-        render json: {
-          products: @results.map { |result| ProductSerializer.new(result.record).as_json },
-          total: @results.total_count,
+        @pagy, @products = pagy(
+          Product.search_with_filters(params[:q], params),
           page: params[:page] || 1,
-          per_page: params[:per_page] || 20
-        }
+          limit: params[:per_page] || 20
+        )
+
+        render json: @products,
+               root: "products",
+               each_serializer: ProductSerializer,
+               meta: pagination_metadata(@pagy),
+               adapter: :json
       end
 
       private

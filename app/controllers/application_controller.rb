@@ -4,8 +4,8 @@ class ApplicationController < ActionController::API
   include Pagy::Method
 
   before_action :authenticate_request
-  after_action :verify_authorized, except: :index
-  after_action :verify_policy_scoped, only: :index
+  after_action :verify_authorized, unless: -> { action_name == "index" }
+  after_action :verify_policy_scoped, if: -> { action_name == "index" }
 
   attr_reader :current_user
 
