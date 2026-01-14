@@ -28,7 +28,7 @@ module Api
         @cart_item = @cart.cart_items.find(params[:id])
 
         if @cart_item.update(quantity: params[:quantity])
-          @cart.update_total_price
+          @cart.recalculate_total!
           render json: @cart, serializer: CartSerializer
         else
           render json: { errors: @cart_item.errors.full_messages }, status: :unprocessable_entity

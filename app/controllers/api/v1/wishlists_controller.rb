@@ -4,7 +4,8 @@ module Api
   module V1
     class WishlistsController < ApplicationController
       def index
-        @pagy, @wishlists = pagy(current_user.wishlists.includes(:product), items: 20)
+        @pagy, @wishlists = pagy(policy_scope(Wishlist).includes(:product), items: 20)
+        authorize @wishlists
         render json: {
           wishlists: ActiveModelSerializers::SerializableResource.new(@wishlists, each_serializer: WishlistSerializer),
           pagination: pagination_metadata(@pagy)
@@ -14,6 +15,7 @@ module Api
       def add
         @product = Product.find(params[:product_id])
         @wishlist = current_user.wishlists.build(product_id: @product.id)
+        authorize @wishlist
 
         if @wishlist.save
           render json: { message: "Added to wishlist" }, status: :created
@@ -24,10 +26,13 @@ module Api
 
       def remove
         @wishlist = current_user.wishlists.find_by(product_id: params[:product_id])
-
-        if @wishlist&.destroy
+        
+        if @wishlist
+          authorize @wishlist
+          @wishlist.destroy
           render json: { message: "Removed from wishlist" }, status: :ok
         else
+          skip_authorization
           render json: { error: "Wishlist item not found" }, status: :not_found
         end
       end

@@ -18,6 +18,9 @@ Rails.application.routes.draw do
       post 'auth/verify', to: 'auth#verify'
       post 'auth/resend', to: 'auth#resend_otp'
 
+      # User Profile routes
+      resource :user, only: [:show, :update]
+
       # Products routes
       resources :products, only: [ :index, :show, :create, :update, :destroy ] do
         collection do

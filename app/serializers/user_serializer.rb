@@ -9,6 +9,6 @@ class UserSerializer < ActiveModel::Serializer
   end
 
   def avatar_url
-    object.avatar.attached? ? url_for(object.avatar) : nil
+    object.avatar.attached? ? Rails.application.routes.url_helpers.rails_blob_path(object.avatar, only_path: true) : nil
   end
 end

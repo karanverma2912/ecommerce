@@ -1,6 +1,10 @@
 
 # app/policies/user_policy.rb
 class UserPolicy < ApplicationPolicy
+  def show?
+    user.present? && (user.admin? || user == record)
+  end
+
   def update?
     user&.admin? || user == record
   end
