@@ -8,6 +8,14 @@ class Product < ApplicationRecord
   has_many :order_items, dependent: :destroy
   has_many_attached :images
 
+  def self.ransackable_attributes(auth_object = nil)
+    ["category_id", "created_at", "description", "discount_percentage", "id", "is_active", "name", "price", "quantity_in_stock", "sku", "updated_at"]
+  end
+
+  def self.ransackable_associations(auth_object = nil)
+    ["category", "reviews", "wishlists", "cart_items", "order_items"]
+  end
+
   # Validations
   validates :name, presence: true
   validates :description, presence: true

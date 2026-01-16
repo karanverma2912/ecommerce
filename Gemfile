@@ -83,3 +83,9 @@ group :test do
   gem "faker"
   gem "shoulda-matchers"
 end
+
+gem "foreman", "~> 0.90.0", group: :development
+
+
+
+

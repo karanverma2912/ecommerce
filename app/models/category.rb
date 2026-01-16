@@ -4,6 +4,14 @@ class Category < ApplicationRecord
   has_many :products, dependent: :destroy
   has_one_attached :image
 
+  def self.ransackable_attributes(auth_object = nil)
+    ["created_at", "description", "id", "is_active", "name", "slug", "updated_at"]
+  end
+
+  def self.ransackable_associations(auth_object = nil)
+    ["products"]
+  end
+
   # Validations
   validates :name, presence: true, uniqueness: true
   validates :description, presence: true
