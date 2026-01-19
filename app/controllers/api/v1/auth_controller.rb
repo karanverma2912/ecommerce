@@ -12,7 +12,7 @@ module Api
 
         if @user
           if @user.email_verified
-            return render json: { errors: ["Email has already been taken"] }, status: :unprocessable_entity
+            return render json: { errors: [ "Email has already been taken" ] }, status: :unprocessable_entity
           else
             # Smart Upsert: Update existing unverified user
             @user.assign_attributes(user_params)
@@ -24,32 +24,27 @@ module Api
           @user.email_verified = false
         end
 
-        if @user.save
-          # Generate OTP
-          otp = sprintf("%06d", rand(100000..999999))
-          @user.update(otp_code: otp, otp_expires_at: 10.minutes.from_now)
+      if @user.save
+        generate_and_send_otp(@user)
 
-          # Send Email
-          UserMailer.send_otp_email(@user, otp).deliver_now
-
-          render json: {
-            message: "Registration successful. Please check your email for the verification code.",
-            email: @user.email
-          }, status: :created
-        else
-          render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity
-        end
+        render json: {
+          message: "Registration successful. Please check your email for the verification code.",
+          email: @user.email
+        }, status: :created
+      else
+        render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity
+      end
       end
 
       def verify
         email = params[:email]
         otp = params[:otp]
-        
+
         @user = User.find_by(email: email)
 
         if @user && @user.otp_code == otp && @user.otp_expires_at > Time.current
           @user.update(email_verified: true, otp_code: nil, otp_expires_at: nil)
-          
+
           token = JsonWebToken.encode({ user_id: @user.id })
           render json: {
             user: UserSerializer.new(@user).as_json,
@@ -67,11 +62,8 @@ module Api
         @user = User.find_by(email: email)
 
         if @user
-          otp = sprintf("%06d", rand(100000..999999))
-          @user.update(otp_code: otp, otp_expires_at: 10.minutes.from_now)
-          
-          UserMailer.send_otp_email(@user, otp).deliver_now
-          
+          generate_and_send_otp(@user)
+
           render json: { message: "Verification code resent" }, status: :ok
         else
           render json: { error: "User not found" }, status: :not_found
@@ -91,7 +83,10 @@ module Api
               message: "Logged in successfully"
             }, status: :ok
           else
-            render json: { error: "Please verify your email address before logging in." }, status: :forbidden
+            render json: {
+              error: "Please verify your email address before logging in.",
+              email_verified: false
+            }, status: :forbidden
           end
         else
           render json: { error: "Invalid email or password" }, status: :unauthorized
@@ -115,6 +110,12 @@ module Api
       end
 
       private
+
+      def generate_and_send_otp(user)
+        otp = sprintf("%06d", rand(100000..999999))
+        user.update(otp_code: otp, otp_expires_at: 10.minutes.from_now)
+        UserMailer.send_otp_email(user, otp).deliver_now
+      end
 
       def user_params
         params.require(:user).permit(:email, :password, :password_confirmation, :first_name, :last_name)
