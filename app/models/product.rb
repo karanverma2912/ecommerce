@@ -6,6 +6,7 @@ class Product < ApplicationRecord
   has_many :wishlists, dependent: :destroy
   has_many :cart_items, dependent: :destroy
   has_many :order_items, dependent: :destroy
+  has_many :notifications, as: :notifiable, dependent: :destroy
   has_many_attached :images
 
   def self.ransackable_attributes(auth_object = nil)

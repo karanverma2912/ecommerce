@@ -5,6 +5,7 @@ class Order < ApplicationRecord
   belongs_to :user
   has_many :order_items, dependent: :destroy
   has_many :products, through: :order_items
+  has_many :notifications, as: :notifiable, dependent: :destroy
 
   # Validations
   validates :total_amount, presence: true, numericality: { greater_than: 0 }

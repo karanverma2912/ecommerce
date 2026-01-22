@@ -4,6 +4,7 @@ class Review < ApplicationRecord
   belongs_to :user
   belongs_to :product
   has_many :comments, dependent: :destroy
+  has_many :notifications, as: :notifiable, dependent: :destroy
 
   # Validations
   validates :rating, presence: true, numericality: { greater_than_or_equal_to: 1, less_than_or_equal_to: 5 }
