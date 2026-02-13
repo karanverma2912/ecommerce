@@ -21,7 +21,22 @@ module Api
         @cart = current_user.carts.first_or_create
         @order = Order.new
 
-        if @order.create_from_cart(@cart, params[:shipping_address])
+        shipping_address = params[:shipping_address]
+        
+        # Simple validation for shipping address
+        unless valid_address?(shipping_address)
+           render json: { error: "Invalid shipping address. Please provide street, city, state, zip_code, and country." }, status: :unprocessable_entity
+           return
+        end
+
+        # Check stock before proceeding
+        @order = Order.new
+        unless @order.check_stock!(@cart)
+            render json: { errors: @order.errors.full_messages }, status: :unprocessable_entity
+            return
+        end
+
+        if @order.create_from_cart(@cart, shipping_address.to_json)
           session = create_stripe_session(@order)
           render json: {
             order: OrderSerializer.new(@order).as_json,
@@ -59,6 +74,12 @@ module Api
             user_id: current_user.id
           }
         )
+      end
+
+      def valid_address?(address)
+        return false unless address.is_a?(ActionController::Parameters) || address.is_a?(Hash)
+        required_fields = %w[street city state zip_code country]
+        required_fields.all? { |field| address[field].present? }
       end
 
       def build_line_items(order)

@@ -48,4 +48,14 @@ class Order < ApplicationRecord
   rescue ActiveRecord::RecordInvalid
     false
   end
+
+  def check_stock!(cart)
+    cart.cart_items.each do |item|
+      if item.product.quantity_in_stock < item.quantity
+        errors.add(:base, "Insufficient stock for #{item.product.name}")
+        return false
+      end
+    end
+    true
+  end
 end

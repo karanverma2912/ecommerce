@@ -8,7 +8,7 @@ class PaymentConfirmationJob < ApplicationJob
     # Decrement product quantity in stock
     order.order_items.each do |item|
       product = item.product
-      product.update(quantity_in_stock: product.quantity_in_stock - item.quantity)
+      product.decrement!(:quantity_in_stock, item.quantity)
     end
   end
 end
