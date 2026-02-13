@@ -12,40 +12,42 @@ module Api
       def add_item
         @cart = current_user.carts.first_or_create
         authorize @cart
-        @product = Product.find(params[:product_id])
 
-        if @product.in_stock?
-          @cart.add_product(@product, params[:quantity] || 1)
+        service = CartService.new(@cart)
+        if service.add_item(params[:product_id], params[:quantity] || 1)
           render json: @cart, serializer: CartSerializer, status: :ok
         else
-          render json: { error: "Product is out of stock" }, status: :unprocessable_entity
+          render json: { error: service.error }, status: :unprocessable_entity
         end
       end
 
       def update_item
         @cart = current_user.carts.first_or_create
         authorize @cart
-        @cart_item = @cart.cart_items.find(params[:id])
 
-        if @cart_item.update(quantity: params[:quantity])
-          @cart.recalculate_total!
+        service = CartService.new(@cart)
+        if service.update_item(params[:id], params[:quantity])
           render json: @cart, serializer: CartSerializer
         else
-          render json: { errors: @cart_item.errors.full_messages }, status: :unprocessable_entity
+          render json: { errors: service.error }, status: :unprocessable_entity
         end
       end
 
       def remove_item
         @cart = current_user.carts.first_or_create
         authorize @cart
-        @cart.remove_product(params[:product_id])
+
+        service = CartService.new(@cart)
+        service.remove_item(params[:product_id])
         render json: @cart, serializer: CartSerializer
       end
 
       def clear
         @cart = current_user.carts.first_or_create
         authorize @cart
-        @cart.clear
+
+        service = CartService.new(@cart)
+        service.clear
         render json: { message: "Cart cleared" }, status: :ok
       end
     end
