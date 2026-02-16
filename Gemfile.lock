@@ -109,7 +109,7 @@ GEM
     base64 (0.3.0)
     bcrypt (3.1.20)
     bcrypt_pbkdf (1.1.2)
-    bigdecimal (3.3.1)
+    bigdecimal (4.0.1)
     bootsnap (1.19.0)
       msgpack (~> 1.2)
     brakeman (7.1.1)
@@ -170,7 +170,7 @@ GEM
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
     jmespath (1.6.2)
-    json (2.18.0)
+    json (2.18.1)
     jsonapi-renderer (0.2.2)
     jwt (3.1.2)
       base64
@@ -268,7 +268,7 @@ GEM
       activesupport (>= 3.0.0)
     raabro (1.4.0)
     racc (1.8.1)
-    rack (3.2.4)
+    rack (3.2.5)
     rack-cors (3.0.0)
       logger
       rack (>= 3.0.14)
@@ -315,7 +315,7 @@ GEM
       erb
       psych (>= 4.0.0)
       tsort
-    redis-client (0.26.2)
+    redis-client (0.26.4)
       connection_pool
     regexp_parser (2.11.3)
     reline (0.6.3)
@@ -372,14 +372,15 @@ GEM
     rufus-scheduler (3.9.2)
       fugit (~> 1.1, >= 1.11.1)
     securerandom (0.4.1)
-    sentry-rails (6.2.0)
+    sentry-rails (6.3.1)
       railties (>= 5.2.0)
-      sentry-ruby (~> 6.2.0)
-    sentry-ruby (6.2.0)
+      sentry-ruby (~> 6.3.1)
+    sentry-ruby (6.3.1)
       bigdecimal
       concurrent-ruby (~> 1.0, >= 1.0.2)
-    sentry-sidekiq (6.2.0)
-      sentry-ruby (~> 6.2.0)
+      logger
+    sentry-sidekiq (6.3.1)
+      sentry-ruby (~> 6.3.1)
       sidekiq (>= 5.0)
     shoulda-matchers (7.0.1)
       activesupport (>= 7.1)
