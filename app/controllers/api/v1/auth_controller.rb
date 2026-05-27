@@ -59,7 +59,7 @@ module Api
 
       def refresh
         service = AuthService.new
-        if service.refresh_token(params[:refresh_token])
+        if service.refresh_access_token(params[:refresh_token])
           render json: { token: service.token }, status: :ok
         else
           render json: { error: service.error }, status: :unauthorized

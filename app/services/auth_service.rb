@@ -74,8 +74,8 @@ class AuthService
     end
   end
 
-  def refresh_token(refresh_token)
-    decoded = JsonWebToken.decode(refresh_token)
+  def refresh_access_token(token)
+    decoded = JsonWebToken.decode(token)
 
     if decoded
       @user = User.find_by(id: decoded[:user_id])

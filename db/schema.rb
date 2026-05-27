@@ -123,7 +123,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_22_172821) do
   end
 
   create_table "order_items", force: :cascade do |t|
-    t.datetime "created_at", null: false
+    t.datetime "created_at", null: false                                                        
     t.bigint "order_id", null: false
     t.decimal "price", precision: 10, scale: 2, default: "0.0", null: false
     t.bigint "product_id", null: false
